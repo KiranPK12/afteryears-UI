@@ -1,26 +1,198 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Life Dashboard — design system
+ * Surfaces layer in light + dark (not a simple invert).
+ * Three text roles per screen: title, body, meta.
+ * Spacing rhythm: 4 · 8 · 12 · 16 · 20 · 24 · 32 via Tailwind spacing scale.
+ */
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-accent-soft: var(--accent-soft);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-2xl: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  color-scheme: light;
+
+  --background: #f7f7f8;
+  --foreground: #0b0b0c;
+
+  --surface: #f7f7f8;
+  --surface-elevated: #ffffff;
+
+  --card: #ffffff;
+  --card-foreground: #0b0b0c;
+
+  --popover: #ffffff;
+  --popover-foreground: #0b0b0c;
+
+  --primary: #111113;
+  --primary-foreground: #fafafa;
+
+  --secondary: #ececee;
+  --secondary-foreground: #111113;
+
+  --muted: #ececee;
+  --muted-foreground: #5c5c66;
+
+  --accent: #ececee;
+  --accent-foreground: #111113;
+
+  --accent-soft: #111113;
+
+  --border: transparent;
+  --input: #e2e2e6;
+  --ring: #111113;
+
+  --radius: 1rem;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #070708;
+  --foreground: #f4f4f5;
+
+  --surface: #070708;
+  --surface-elevated: #101012;
+
+  --card: #101012;
+  --card-foreground: #f4f4f5;
+
+  --popover: #101012;
+  --popover-foreground: #f4f4f5;
+
+  --primary: #f4f4f5;
+  --primary-foreground: #111113;
+
+  --secondary: #1a1a1f;
+  --secondary-foreground: #f4f4f5;
+
+  --muted: #1a1a1f;
+  --muted-foreground: #a1a1aa;
+
+  --accent: #1a1a1f;
+  --accent-foreground: #f4f4f5;
+
+  --accent-soft: #c4c4cc;
+
+  --border: transparent;
+  --input: #24242b;
+  --ring: #d4d4d8;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Typography roles — max three sizes per screen */
+@layer utilities {
+  .text-title {
+    @apply text-2xl font-medium tracking-tight sm:text-[1.75rem] leading-snug;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed text-foreground;
+  }
+
+  .text-meta {
+    @apply text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground;
+  }
+
+  .shadow-elevated {
+    box-shadow: 0 12px 40px -18px rgba(15, 15, 20, 0.18);
+  }
+
+  .dark .shadow-elevated {
+    box-shadow: 0 18px 48px -20px rgba(0, 0, 0, 0.65);
+  }
+
+  .shadow-soft {
+    box-shadow: 0 10px 30px -16px rgba(15, 15, 20, 0.14);
+  }
+
+  .dark .shadow-soft {
+    box-shadow: 0 14px 36px -18px rgba(0, 0, 0, 0.55);
+  }
+
+  .ds-lift {
+    @apply transition-transform duration-200 ease-out will-change-transform;
+  }
+
+  .ds-lift:hover {
+    transform: scale(1.01);
+  }
+
+  .ds-lift:active {
+    transform: scale(0.97);
+  }
+
+  .ds-modal-surface {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .animate-modal-in {
+    animation: modal-in 220ms ease-out both;
+  }
+
+  .animate-backdrop-in {
+    animation: backdrop-in 180ms ease-out both;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
